@@ -2,6 +2,7 @@ package by.vorobyov.transfer;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+import by.vorobyov.transfer.domain.Representation;
 import by.vorobyov.transfer.service.TransferService;
 import by.vorobyov.transfer.utils.RequestValidator;
 import by.vorobyov.transfer.domain.TransferRequest;
@@ -36,9 +37,8 @@ public class TransferController {
       log.warn("transfer request is not valid: " + transferRequest);
       return Response.status(BAD_REQUEST)
           .type(MediaType.APPLICATION_JSON)
-          .entity("Can't transfer required amount due to bad request")
+          .entity(new Representation("Can't transfer required amount due to bad request"))
           .build();
     }
-
   }
 }

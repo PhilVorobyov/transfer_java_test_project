@@ -2,6 +2,7 @@ package by.vorobyov.transfer.service;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+import by.vorobyov.transfer.domain.Representation;
 import by.vorobyov.transfer.dao.TransferDao;
 import by.vorobyov.transfer.domain.Account;
 import by.vorobyov.transfer.domain.TransferRequest;
@@ -53,15 +54,15 @@ public class TransferService {
 
         return Response.status(Status.OK)
             .type(MediaType.APPLICATION_JSON_TYPE)
-            .entity("Amount:" + amount + " was successfully transfered from account:" + origin.getAccount_number()
-                + " to account: " + destination.getAccount_number())
+            .entity(new Representation("Amount:" + amount + " was successfully transfered from account:" + origin.getAccount_number()
+                + " to account: " + destination.getAccount_number()))
             .build();
 
       } catch (Exception e) {
         log.error("can't transfer amount due to unexpected exception: " + e);
         return Response.status(BAD_REQUEST)
             .type(MediaType.APPLICATION_JSON_TYPE)
-            .entity("Can't transfer required amount:" + e.getMessage())
+            .entity(new Representation("Can't transfer required amount:" + e.getMessage()))
             .build();
       }
     });
