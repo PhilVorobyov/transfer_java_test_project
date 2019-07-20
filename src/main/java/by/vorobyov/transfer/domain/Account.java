@@ -1,4 +1,4 @@
-package by.vorobyov.domain;
+package by.vorobyov.transfer.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Account {
 
-  @NotEmpty  private int account_id;
+  @NotEmpty  private int account_number;
   @NotEmpty private int user_id;
   @NotNull private BigDecimal amount;
 }

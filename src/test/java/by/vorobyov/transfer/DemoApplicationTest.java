@@ -1,4 +1,4 @@
-package by.vorobyov;
+package by.vorobyov.transfer;
 
 import static org.junit.Assert.*;
 

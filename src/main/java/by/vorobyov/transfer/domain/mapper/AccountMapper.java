@@ -1,6 +1,6 @@
-package by.vorobyov.domain.mapper;
+package by.vorobyov.transfer.domain.mapper;
 
-import by.vorobyov.domain.Account;
+import by.vorobyov.transfer.domain.Account;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
@@ -11,6 +11,6 @@ public class AccountMapper implements ResultSetMapper<Account>
 {
   public Account map(int index, ResultSet resultSet, StatementContext statementContext) throws SQLException
   {
-    return new Account(resultSet.getInt("account_id"), resultSet.getInt("user_id"), resultSet.getBigDecimal("amount"));
+    return new Account(resultSet.getInt("account_number"), resultSet.getInt("user_id"), resultSet.getBigDecimal("amount"));
   }
 }

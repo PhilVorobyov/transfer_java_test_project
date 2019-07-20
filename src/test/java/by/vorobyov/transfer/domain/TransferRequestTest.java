@@ -1,4 +1,4 @@
-package by.vorobyov.domain;
+package by.vorobyov.transfer.domain;
 
 import static io.dropwizard.testing.FixtureHelpers.fixture;
 

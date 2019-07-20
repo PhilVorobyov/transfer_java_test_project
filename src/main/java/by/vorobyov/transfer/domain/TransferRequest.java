@@ -1,8 +1,7 @@
-package by.vorobyov.domain;
+package by.vorobyov.transfer.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
@@ -10,15 +9,15 @@ import javax.validation.constraints.NotNull;
 @Getter @Setter
 public class TransferRequest {
 
-  @NotEmpty private String userId;
-  @NotEmpty private String accountOrigin;
-  @NotEmpty private String accountDestination;
+  @NotNull private int userId;
+  @NotNull private int accountOrigin;
+  @NotNull private int accountDestination;
   @NotNull private BigDecimal amount;
 
   public TransferRequest() {
   }
 
-  public TransferRequest(final String userId, final String accountOrigin, final String accountDestination, final BigDecimal amount) {
+  public TransferRequest(final int userId, final int accountOrigin, final int accountDestination, final BigDecimal amount) {
     this.userId = userId;
     this.accountOrigin = accountOrigin;
     this.accountDestination = accountDestination;

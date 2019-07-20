@@ -1,9 +1,8 @@
-package by.vorobyov;
+package by.vorobyov.transfer;
 
-import static by.vorobyov.utils.RequestValidator.validate;
-
-import by.vorobyov.domain.TransferRequest;
-import by.vorobyov.service.TransferService;
+import by.vorobyov.transfer.service.TransferService;
+import by.vorobyov.transfer.utils.RequestValidator;
+import by.vorobyov.transfer.domain.TransferRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Valid;
@@ -28,7 +27,7 @@ public class TransferController {
   @Path("/transfer")
   public Response transfer(@Valid TransferRequest transferRequest) {
     log.info("transfer request: " + transferRequest);
-    if (validate(transferRequest)) {
+    if (RequestValidator.validate(transferRequest)) {
       transferService.transfer(transferRequest);
       return Response.ok().build();
     }

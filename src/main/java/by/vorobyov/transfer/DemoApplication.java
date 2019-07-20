@@ -1,7 +1,7 @@
-package by.vorobyov;
+package by.vorobyov.transfer;
 
-import by.vorobyov.dao.TransferDao;
-import by.vorobyov.service.TransferService;
+import by.vorobyov.transfer.dao.TransferDao;
+import by.vorobyov.transfer.service.TransferService;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Environment;
@@ -20,6 +20,6 @@ public class DemoApplication extends Application<DemoConfiguration> {
     final TransferDao transferDao = jdbi.onDemand(TransferDao.class);
     final TransferService transferService = new TransferService(transferDao);
     TransferController transferController = new TransferController(transferService);
-    environment.jersey().register(transferService);
+    environment.jersey().register(transferController);
   }
 }
