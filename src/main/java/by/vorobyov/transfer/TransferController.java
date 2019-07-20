@@ -28,8 +28,8 @@ public class TransferController {
   public Response transfer(@Valid TransferRequest transferRequest) {
     log.info("transfer request: " + transferRequest);
     if (RequestValidator.isValid(transferRequest)) {
-      transferService.transfer(transferRequest);
-      return Response.ok().build();
+      return transferService.transfer(transferRequest);
+//      return Response.ok().build();
     }
     else {
       log.error("transfer request is not valid: " + transferRequest);

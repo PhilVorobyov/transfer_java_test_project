@@ -1,6 +1,5 @@
 package by.vorobyov.transfer;
 
-import by.vorobyov.transfer.dao.TransferDao;
 import by.vorobyov.transfer.service.TransferService;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -17,9 +16,8 @@ public class DemoApplication extends Application<DemoConfiguration> {
   public void run(DemoConfiguration configuration, Environment environment) {
     final DBIFactory factory = new DBIFactory();
     final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
-    final TransferDao transferDao = jdbi.onDemand(TransferDao.class);
-    final TransferService transferService = new TransferService(transferDao);
-    TransferController transferController = new TransferController(transferService);
+    final TransferService transferService = new TransferService(jdbi);
+    final TransferController transferController = new TransferController(transferService);
     environment.jersey().register(transferController);
   }
 }
