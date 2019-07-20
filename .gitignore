@@ -39,6 +39,7 @@ gradlew.bat
 !gradle-wrapper.jar
 .gradletasknamecache
 gradle/wrapper/gradle-wrapper.properties
+out/*
 
 
 # macOS
