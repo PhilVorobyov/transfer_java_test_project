@@ -37,7 +37,7 @@ public class TransferController {
       log.warn("transfer request is not valid: " + transferRequest);
       return Response.status(BAD_REQUEST)
           .type(MediaType.APPLICATION_JSON)
-          .entity(new Representation("Can't transfer required amount due to bad request"))
+          .entity(new Representation(BAD_REQUEST.getStatusCode(), "Can't transfer required amount due to bad request"))
           .build();
     }
   }

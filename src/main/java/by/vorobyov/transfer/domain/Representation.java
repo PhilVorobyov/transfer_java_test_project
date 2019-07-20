@@ -8,6 +8,8 @@ import lombok.Data;
 public class Representation {
 
   @JsonProperty
-  private String content;
+  private int code;
+  @JsonProperty
+  private String message;
 
 }

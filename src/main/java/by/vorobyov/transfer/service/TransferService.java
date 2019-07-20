@@ -1,10 +1,12 @@
 package by.vorobyov.transfer.service;
 
+import static java.util.Objects.nonNull;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+import static javax.ws.rs.core.Response.Status.OK;
 
-import by.vorobyov.transfer.domain.Representation;
 import by.vorobyov.transfer.dao.TransferDao;
 import by.vorobyov.transfer.domain.Account;
+import by.vorobyov.transfer.domain.Representation;
 import by.vorobyov.transfer.domain.TransferRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.skife.jdbi.v2.DBI;
@@ -12,7 +14,6 @@ import org.skife.jdbi.v2.DBI;
 import java.math.BigDecimal;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 @Slf4j
 public class TransferService {
@@ -31,15 +32,16 @@ public class TransferService {
         int accountDestination = transferRequest.getAccountDestination();
         BigDecimal amount = transferRequest.getAmount();
 
+
         Account origin = transferDao.getAccountByNumber(accountOrigin);
         if (origin == null) {
           log.warn("No such origin account: " + accountOrigin);
-          throw new Exception("No such account: " + accountOrigin);
+          throw new Exception("No such origin account founded: " + accountOrigin);
         }
         Account destination = transferDao.getAccountByNumber(accountDestination);
         if (destination == null) {
           log.warn("No such destination account: " + accountDestination);
-          throw new Exception("No such destination account: " + accountDestination);
+          throw new Exception("No such destination account founded: " + accountDestination);
         }
 
         if (origin.getAmount().subtract(amount).compareTo(BigDecimal.ZERO) < 0) {
@@ -48,23 +50,33 @@ public class TransferService {
         }
 
         transferDao.updateAccount(accountOrigin, origin.getAmount().subtract(amount));
+        doMagic();
         transferDao.updateAccount(accountDestination, destination.getAmount().add(amount));
 
         log.info("amount was successfully transfered");
 
-        return Response.status(Status.OK)
+        return Response.status(OK)
             .type(MediaType.APPLICATION_JSON_TYPE)
-            .entity(new Representation("Amount:" + amount + " was successfully transfered from account:" + origin.getAccount_number()
+            .entity(new Representation(OK.getStatusCode(), "Amount:" + amount + " was successfully transfered from account: " + origin.getAccount_number()
                 + " to account: " + destination.getAccount_number()))
             .build();
 
       } catch (Exception e) {
-        log.error("can't transfer amount due to unexpected exception: " + e);
-        return Response.status(BAD_REQUEST)
-            .type(MediaType.APPLICATION_JSON_TYPE)
-            .entity(new Representation("Can't transfer required amount:" + e.getMessage()))
-            .build();
+        if (nonNull(e.getMessage())) {
+          conn.rollback();
+          log.error("can't transfer amount due to unexpected exception: " + e);
+          return Response.status(BAD_REQUEST)
+              .type(MediaType.APPLICATION_JSON_TYPE)
+              .entity(new Representation(BAD_REQUEST.getStatusCode(), "Can't transfer required amount: " + e.getMessage()))
+              .build();
+        } else {
+          throw new RuntimeException();
+        }
       }
     });
+  }
+
+  private void doMagic() {
+    throw new RuntimeException("sa");
   }
 }
