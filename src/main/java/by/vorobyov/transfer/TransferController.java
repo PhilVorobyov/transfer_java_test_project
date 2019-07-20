@@ -27,7 +27,7 @@ public class TransferController {
   @Path("/transfer")
   public Response transfer(@Valid TransferRequest transferRequest) {
     log.info("transfer request: " + transferRequest);
-    if (RequestValidator.validate(transferRequest)) {
+    if (RequestValidator.isValid(transferRequest)) {
       transferService.transfer(transferRequest);
       return Response.ok().build();
     }

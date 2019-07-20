@@ -1,58 +1,50 @@
 package by.vorobyov.transfer;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import io.dropwizard.testing.ResourceHelpers;
-import io.dropwizard.testing.junit.DropwizardAppRule;
-import io.dropwizard.testing.junit.DropwizardClientRule;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.junit.ClassRule;
+import by.vorobyov.transfer.domain.TransferRequest;
+import by.vorobyov.transfer.service.TransferService;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
+import java.math.BigDecimal;
 import javax.ws.rs.core.Response;
 
 public class TransferControllerTest {
-  @Path("/ping")
-  public static class PingResource {
-    @GET
-    public String ping() {
-      return "pong";
-    }
-  }
 
-  @ClassRule
-  public static final DropwizardClientRule dropwizard = new DropwizardClientRule(new PingResource());
 
   @Test
-  public void shouldPing() throws IOException {
-    final URL url = new URL(dropwizard.baseUri() + "/ping");
-    final String response = new BufferedReader(new InputStreamReader(url.openStream())).readLine();
-    assertEquals("pong", response);
-  }
+  public void transfer_testSuccessfullTransfer() {
+    // Given
+    TransferService transferService = mock(TransferService.class);
+    TransferRequest transferRequest = new TransferRequest(1,111,222,new BigDecimal(123.32));
+    TransferController transferController = new TransferController(transferService);
 
-  @ClassRule
-  public static final DropwizardAppRule<DemoConfiguration> RULE =
-      new DropwizardAppRule<DemoConfiguration>(DemoApplication.class, ResourceHelpers.resourceFilePath("my-app-config.yaml"));
+    // When
+    Response response = transferController.transfer(transferRequest);
+
+    // Then
+    assertNotNull(response);
+    verify(transferService, times(1)).transfer(any());
+  }
 
   @Test
-  public void loginHandlerRedirectsAfterPost() {
-    Client client = new JerseyClientBuilder().build();
+  public void transfer_testNegativeAccount() {
+    // Given
+    TransferService transferService = mock(TransferService.class);
+    TransferRequest transferRequest = new TransferRequest(1,-111,222,new BigDecimal(123.32));
+    TransferController transferController = new TransferController(transferService);
 
-    Response response = client.target(
-        String.format("http://localhost:%d/login", RULE.getLocalPort()))
-        .request()
-        .post(Entity.json(""));
+    // When
+    Response response = transferController.transfer(transferRequest);
 
-    assertThat(response.getStatus()).isEqualTo(302);
+    // Then
+    assertNotNull(response);
+    verify(transferService, times(0)).transfer(any());
   }
+
 
 }

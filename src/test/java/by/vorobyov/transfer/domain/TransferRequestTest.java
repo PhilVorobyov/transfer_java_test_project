@@ -14,7 +14,7 @@ public class TransferRequestTest {
 
   @Test
   public void transferRequest_serializeToJSON() throws Exception {
-    final TransferRequest person = new TransferRequest("123","1234567890", "0987654321", new BigDecimal(1234.23432));
+    final TransferRequest person = new TransferRequest(2,111, 222, new BigDecimal(1234.23432));
 
     final String expected = MAPPER.writeValueAsString(
         MAPPER.readValue(fixture("transfer_request.json"), TransferRequest.class));
