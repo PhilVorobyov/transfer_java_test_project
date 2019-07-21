@@ -15,7 +15,7 @@ public class DemoApplication extends Application<DemoConfiguration> {
   @Override
   public void run(DemoConfiguration configuration, Environment environment) {
     final DBIFactory factory = new DBIFactory();
-    final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
+    final DBI jdbi = factory.build(environment, configuration.getDataSourceFactory(), "h2");
     final TransferService transferService = new TransferService(jdbi);
     final TransferController transferController = new TransferController(transferService);
     environment.jersey().register(transferController);

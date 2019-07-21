@@ -20,5 +20,4 @@ public class TransferRequestTest {
         MAPPER.readValue(fixture("transfer_request.json"), TransferRequest.class));
     (MAPPER.writeValueAsString(person)).equals(expected);
   }
-
 }
