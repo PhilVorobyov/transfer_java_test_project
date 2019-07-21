@@ -25,9 +25,9 @@ public class TransferService {
   }
 
   public Response transfer(final TransferRequest transferRequest) {
-    return dbi.inTransaction((conn, status) -> {
+    return dbi.inTransaction((handle, status) -> {
       try {
-        TransferDao transferDao = conn.attach(TransferDao.class);
+        TransferDao transferDao = handle.attach(TransferDao.class);
         int accountOrigin = transferRequest.getAccountOrigin();
         int accountDestination = transferRequest.getAccountDestination();
         BigDecimal amount = transferRequest.getAmount();
@@ -50,7 +50,6 @@ public class TransferService {
         }
 
         transferDao.updateAccount(accountOrigin, origin.getAmount().subtract(amount));
-        doMagic();
         transferDao.updateAccount(accountDestination, destination.getAmount().add(amount));
 
         log.info("amount was successfully transfered");
@@ -63,7 +62,7 @@ public class TransferService {
 
       } catch (Exception e) {
         if (nonNull(e.getMessage())) {
-          conn.rollback();
+          handle.rollback();
           log.error("can't transfer amount due to unexpected exception: " + e);
           return Response.status(BAD_REQUEST)
               .type(MediaType.APPLICATION_JSON_TYPE)
@@ -74,9 +73,5 @@ public class TransferService {
         }
       }
     });
-  }
-
-  private void doMagic() {
-    throw new RuntimeException("sa");
   }
 }
